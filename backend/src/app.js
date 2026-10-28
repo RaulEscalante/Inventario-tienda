@@ -8,6 +8,7 @@ import categoryRoutes from "./routes/category.routes.js";
 import productRoutes from "./routes/product.routes.js";
 import brandRoutes from "./routes/brand.routes.js";
 import warehouseRoutes from "./routes/warehouse.routes.js";
+import inventoryRoutes from "./routes/inventory.routes.js";
 
 const app = express();
 
@@ -26,5 +27,6 @@ app.use("/api/categories", categoryRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/brands", brandRoutes);
 app.use("/api/warehouses", warehouseRoutes);
+app.use("/api/inventory", inventoryRoutes);
 
 export default app;
