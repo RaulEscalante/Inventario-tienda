@@ -11,6 +11,7 @@ import PlaceholderPage from "./pages/PlaceholderPage.jsx";
 import CategoriesPage from "./pages/CategoriesPage.jsx";
 import ProductsPage from "./pages/ProductsPage.jsx";
 import BrandsPage from "./pages/BrandsPage.jsx";
+import WarehousesPage from "./pages/WarehousesPage.jsx";
 
 import "./App.css";
 
@@ -28,6 +29,7 @@ export default function App() {
               <Route path="productos" element={<ProductsPage />} />
               <Route path="categorias" element={<CategoriesPage />} />
               <Route path="/marcas" element={<BrandsPage />} />
+              <Route path="almacenes" element={<WarehousesPage />} />
 
               <Route path="inventario" element={
                 <PlaceholderPage title="Inventario"

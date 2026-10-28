@@ -1,6 +1,6 @@
 
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, Package, Tags, Tag, Boxes, ArrowLeftRight, X, } from "lucide-react";
+import { LayoutDashboard, Package, Tags, Tag, Boxes, Warehouse, ArrowLeftRight, X, } from "lucide-react";
 
 const navigation = [
   {
@@ -15,6 +15,7 @@ const navigation = [
       { name: "Productos", path: "/productos", icon: Package },
       { name: "Categorías", path: "/categorias", icon: Tags },
       { name: "Marcas", path: "/marcas", icon: Tag },
+      { name: "Almacenes", path: "/almacenes", icon: Warehouse },
       { name: "Inventario", path: "/inventario", icon: Boxes },
       {
         name: "Movimientos",
