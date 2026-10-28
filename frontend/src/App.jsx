@@ -13,6 +13,7 @@ import ProductsPage from "./pages/ProductsPage.jsx";
 import BrandsPage from "./pages/BrandsPage.jsx";
 import WarehousesPage from "./pages/WarehousesPage.jsx";
 import InventoryPage from "./pages/InventoryPage.jsx";
+import MovementsPage from "./pages/MovementsPage.jsx";
 
 import "./App.css";
 
@@ -32,12 +33,7 @@ export default function App() {
               <Route path="/marcas" element={<BrandsPage />} />
               <Route path="almacenes" element={<WarehousesPage />} />
               <Route path="inventario" element={<InventoryPage />} />
-
-              <Route path="movimientos" element={
-                <PlaceholderPage title="Movimientos"
-                  description="Consulta el historial de entradas, salidas y ajustes de stock." />
-              }
-              />
+              <Route path="movimientos" element={<MovementsPage />} />
             </Route>
           </Route>
 
