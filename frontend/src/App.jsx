@@ -12,6 +12,7 @@ import CategoriesPage from "./pages/CategoriesPage.jsx";
 import ProductsPage from "./pages/ProductsPage.jsx";
 import BrandsPage from "./pages/BrandsPage.jsx";
 import WarehousesPage from "./pages/WarehousesPage.jsx";
+import InventoryPage from "./pages/InventoryPage.jsx";
 
 import "./App.css";
 
@@ -30,12 +31,7 @@ export default function App() {
               <Route path="categorias" element={<CategoriesPage />} />
               <Route path="/marcas" element={<BrandsPage />} />
               <Route path="almacenes" element={<WarehousesPage />} />
-
-              <Route path="inventario" element={
-                <PlaceholderPage title="Inventario"
-                  description="Consulta las existencias y controla las cantidades disponibles en la tienda." />
-              }
-              />
+              <Route path="inventario" element={<InventoryPage />} />
 
               <Route path="movimientos" element={
                 <PlaceholderPage title="Movimientos"
