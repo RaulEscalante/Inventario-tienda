@@ -9,6 +9,7 @@ import productRoutes from "./routes/product.routes.js";
 import brandRoutes from "./routes/brand.routes.js";
 import warehouseRoutes from "./routes/warehouse.routes.js";
 import inventoryRoutes from "./routes/inventory.routes.js";
+import movementRoutes from "./routes/movement.routes.js";
 
 const app = express();
 
@@ -28,5 +29,6 @@ app.use("/api/products", productRoutes);
 app.use("/api/brands", brandRoutes);
 app.use("/api/warehouses", warehouseRoutes);
 app.use("/api/inventory", inventoryRoutes);
+app.use("/api/movements", movementRoutes);
 
 export default app;
