@@ -11,6 +11,7 @@ import {
 } from "../services/productService.js";
 
 import { getCategories } from "../services/categoryService.js";
+import { getBrands } from "../services/brandService.js";
 
 import ProductForm from "../components/products/ProductForm.jsx";
 import ProductTable from "../components/products/ProductTable.jsx";
@@ -19,6 +20,7 @@ import "./products.css";
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [brands, setBrands] = useState([]);
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -30,6 +32,7 @@ export default function ProductsPage() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
+  const [brandFilter, setBrandFilter] = useState("all");
 
   const [showForm, setShowForm] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -39,13 +42,15 @@ export default function ProductsPage() {
     setError("");
 
     try {
-      const [productsData, categoriesData] = await Promise.all([
+      const [productsData, categoriesData, brandsData] = await Promise.all([
         getProducts(),
         getCategories(),
+        getBrands(),
       ]);
 
       setProducts(productsData);
       setCategories(categoriesData);
+      setBrands(brandsData);
     } catch (err) {
       setError(err.message || "No se pudieron cargar los productos.");
     } finally {
@@ -63,7 +68,10 @@ export default function ProductsPage() {
     return products.filter((product) => {
       const matchesSearch =
         product.name.toLocaleLowerCase("es").includes(normalizedSearch) ||
-        product.sku.toLocaleLowerCase("es").includes(normalizedSearch);
+        product.sku.toLocaleLowerCase("es").includes(normalizedSearch) ||
+        (product.brand?.name ?? "")
+          .toLocaleLowerCase("es")
+          .includes(normalizedSearch);
 
       const matchesStatus =
         statusFilter === "all" ||
@@ -74,9 +82,19 @@ export default function ProductsPage() {
         categoryFilter === "all" ||
         String(product.categoryId ?? "") === categoryFilter;
 
-      return matchesSearch && matchesStatus && matchesCategory;
+      const matchesBrand =
+        brandFilter === "all" ||
+        String(product.brandId ?? "") === brandFilter;
+
+      return (
+        matchesSearch &&
+        matchesStatus &&
+        matchesCategory &&
+        matchesBrand
+      );
     });
-  }, [products, search, statusFilter, categoryFilter]);
+  }, [products, search, statusFilter, categoryFilter, brandFilter]);
+
 
   function openCreateForm() {
     setSelectedProduct(null);
@@ -253,6 +271,7 @@ export default function ProductsPage() {
         <ProductForm
           product={selectedProduct}
           categories={categories}
+          brands={brands}
           onSubmit={handleSubmit}
           onCancel={closeForm}
           saving={saving}
@@ -279,8 +298,8 @@ export default function ProductsPage() {
               type="search"
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              placeholder="Buscar por nombre o SKU..."
-              aria-label="Buscar productos por nombre o SKU"
+              placeholder="Buscar por nombre, SKU o marca..."
+              aria-label="Buscar productos por nombre, SKU o marca"
             />
           </div>
 
@@ -297,6 +316,23 @@ export default function ProductsPage() {
               .map((category) => (
                 <option key={category.id} value={String(category.id)}>
                   {category.name}
+                </option>
+              ))}
+          </select>
+
+          <select
+            className="product-filter"
+            value={brandFilter}
+            onChange={(event) => setBrandFilter(event.target.value)}
+            aria-label="Filtrar por marca"
+          >
+            <option value="all">Todas las marcas</option>
+            <option value="">Sin marca</option>
+            {brands
+              .filter((brand) => brand.active)
+              .map((brand) => (
+                <option key={brand.id} value={String(brand.id)}>
+                  {brand.name}
                 </option>
               ))}
           </select>

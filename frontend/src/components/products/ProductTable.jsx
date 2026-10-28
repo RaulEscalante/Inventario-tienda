@@ -51,6 +51,7 @@ export default function ProductTable({
           <tr>
             <th>Producto</th>
             <th>Categoría</th>
+            <th>Marca</th>
             <th>Precio de compra</th>
             <th>Precio de venta</th>
             <th>Stock total</th>
@@ -82,6 +83,13 @@ export default function ProductTable({
                 </td>
 
                 <td>{product.category?.name ?? "Sin categoría"}</td>
+
+                <td>
+                  {product.brand?.name ?? "Sin marca"}
+                  {product.brand && product.brand.active === false && (
+                    <span className="product-sku"> (Inactiva)</span>
+                  )}
+                </td>
 
                 <td>{formatPrice(product.purchasePrice)}</td>
 

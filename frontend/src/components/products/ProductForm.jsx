@@ -5,6 +5,7 @@ import { Save, X } from "lucide-react";
 export default function ProductForm({
   product,
   categories,
+  brands,
   onSubmit,
   onCancel,
   saving,
@@ -16,6 +17,7 @@ export default function ProductForm({
     purchasePrice: "0.00",
     salePrice: "0.00",
     categoryId: "",
+    brandId: "",
   });
 
   const isEditing = Boolean(product);
@@ -29,6 +31,9 @@ export default function ProductForm({
       salePrice: product?.salePrice ?? "0.00",
       categoryId: product?.categoryId
         ? String(product.categoryId)
+        : "",
+      brandId: product?.brandId
+        ? String(product.brandId)
         : "",
     });
   }, [product]);
@@ -53,6 +58,9 @@ export default function ProductForm({
       salePrice: Number(form.salePrice),
       categoryId: form.categoryId
         ? Number(form.categoryId)
+        : null,
+      brandId: form.brandId
+        ? Number(form.brandId)
         : null,
     };
 
@@ -141,6 +149,31 @@ export default function ProductForm({
               .map((category) => (
                 <option key={category.id} value={category.id}>
                   {category.name}
+                </option>
+              ))}
+          </select>
+        </div>
+
+        <div className="product-form-field">
+          <label htmlFor="product-brand">Marca</label>
+          <select
+            id="product-brand"
+            name="brandId"
+            value={form.brandId}
+            onChange={handleChange}
+            disabled={saving}
+          >
+            <option value="">Sin marca</option>
+            {brands
+              .filter(
+                (brand) =>
+                  brand.active ||
+                  String(brand.id) === form.brandId
+              )
+              .map((brand) => (
+                <option key={brand.id} value={String(brand.id)}>
+                  {brand.name}
+                  {!brand.active ? " (Inactiva)" : ""}
                 </option>
               ))}
           </select>

@@ -74,6 +74,15 @@ function validarProducto(datos, parcial = false) {
     }
   }
 
+  if (datos.brandId !== undefined && datos.brandId !== null && datos.brandId !== "") {
+    if (
+      !Number.isSafeInteger(Number(datos.brandId)) ||
+      Number(datos.brandId) <= 0
+    ) {
+      errores.push("El ID de marca debe ser un entero positivo.");
+    }
+  }
+
   return errores;
 }
 
@@ -108,6 +117,13 @@ function normalizarDatos(datos, parcial = false) {
         : Number(resultado.categoryId);
   }
 
+  if (resultado.brandId !== undefined) {
+    resultado.brandId =
+      resultado.brandId === null || resultado.brandId === ""
+        ? null
+        : Number(resultado.brandId);
+  }
+
   return resultado;
 }
 
@@ -125,6 +141,12 @@ function responderError(res, error) {
   }
 
   if (error.code === "INVALID_CATEGORY") {
+    return res.status(400).json({
+      message: error.message,
+    });
+  }
+
+  if (error.code === "INVALID_BRAND") {
     return res.status(400).json({
       message: error.message,
     });

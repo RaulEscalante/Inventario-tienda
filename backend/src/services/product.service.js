@@ -25,6 +25,9 @@ export async function listarProductos({ buscar, activo, categoriaId }) {
       category: {
         select: { id: true, name: true },
       },
+      brand: {
+        select: { id: true, name: true },
+      },
       inventories: {
         select: {
           quantity: true,
@@ -43,6 +46,9 @@ export async function obtenerProductoPorId(id) {
     where: { id },
     include: {
       category: {
+        select: { id: true, name: true },
+      },
+      brand: {
         select: { id: true, name: true },
       },
       inventories: {
@@ -83,8 +89,28 @@ async function comprobarCategoriaActiva(categoryId) {
   }
 }
 
+async function comprobarMarcaActiva(brandId) {
+  if (brandId === null || brandId === undefined) {
+    return;
+  }
+
+  const brand = await prisma.brand.findUnique({
+    where: { id: brandId },
+    select: { id: true, active: true },
+  });
+
+  if (!brand || !brand.active) {
+    const error = new Error(
+      "La marca indicada no existe o está inactiva."
+    );
+    error.code = "INVALID_BRAND";
+    throw error;
+  }
+}
+
 export async function crearProducto(datos) {
   await comprobarCategoriaActiva(datos.categoryId);
+  await comprobarMarcaActiva(datos.brandId);
 
   return prisma.product.create({
     data: {
@@ -94,9 +120,13 @@ export async function crearProducto(datos) {
       purchasePrice: datos.purchasePrice,
       salePrice: datos.salePrice,
       categoryId: datos.categoryId ?? null,
+      brandId: datos.brandId ?? null,
     },
     include: {
       category: {
+        select: { id: true, name: true },
+      },
+      brand: {
         select: { id: true, name: true },
       },
     },
@@ -106,6 +136,10 @@ export async function crearProducto(datos) {
 export async function actualizarProducto(id, datos) {
   if (datos.categoryId !== undefined) {
     await comprobarCategoriaActiva(datos.categoryId);
+  }
+
+  if (datos.brandId !== undefined) {
+    await comprobarMarcaActiva(datos.brandId);
   }
 
   return prisma.product.update({
@@ -125,9 +159,15 @@ export async function actualizarProducto(id, datos) {
       ...(datos.categoryId !== undefined && {
         categoryId: datos.categoryId,
       }),
+      ...(datos.brandId !== undefined && {
+        brandId: datos.brandId,
+      }),
     },
     include: {
       category: {
+        select: { id: true, name: true },
+      },
+      brand: {
         select: { id: true, name: true },
       },
     },
@@ -140,6 +180,9 @@ export async function cambiarEstadoProducto(id, active) {
     data: { active },
     include: {
       category: {
+        select: { id: true, name: true },
+      },
+      brand: {
         select: { id: true, name: true },
       },
     },
