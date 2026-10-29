@@ -1,6 +1,8 @@
 
 import express from "express";
 import cors from "cors";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 import healthRoutes from "./routes/health.routes.js";
 import authRoutes from "./routes/auth.routes.js";
@@ -12,6 +14,14 @@ import inventoryRoutes from "./routes/inventory.routes.js";
 import movementRoutes from "./routes/movement.routes.js";
 
 const app = express();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const frontendDistPath = path.resolve(
+  __dirname,
+  "../../frontend/dist"
+);
 
 app.use(
   cors({
@@ -30,5 +40,26 @@ app.use("/api/brands", brandRoutes);
 app.use("/api/warehouses", warehouseRoutes);
 app.use("/api/inventory", inventoryRoutes);
 app.use("/api/movements", movementRoutes);
+
+// Frontend compilado para producción
+app.use(express.static(frontendDistPath));
+
+// Permitir que React Router gestione sus propias rutas
+app.use((req, res, next) => {
+  if (
+    req.method !== "GET" ||
+    req.path === "/api" ||
+    req.path.startsWith("/api/")
+  ) {
+    return next();
+  }
+
+  res.sendFile(
+    path.join(frontendDistPath, "index.html"),
+    (error) => {
+      if (error) next(error);
+    }
+  );
+});
 
 export default app;

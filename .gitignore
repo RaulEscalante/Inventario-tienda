@@ -12,6 +12,9 @@ node_modules/
 dist/
 build/
 coverage/
+dist-instalador/
+instalador-salida/
+
 
 # Logs
 *.log
